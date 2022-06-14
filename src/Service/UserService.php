@@ -69,4 +69,20 @@ class UserService
 
         return $this->userRepository->find($userId)->getBankAccount();
     }
+    public function balanceIsValid(int $balance): ?int
+    {
+        $maxAmount = 1000;
+
+        if ($balance >= null) {
+            if ($maxAmount>= $balance ) {
+            return true;
+        } else {
+            return false;
+        }
+        }else{
+            return false;
+        }
+        
+    }
 }
+
