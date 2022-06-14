@@ -3,6 +3,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,19 +49,50 @@ class UserService
         ];
     }
 
-    public function debit(int $montant, int $userId): ?int
+    public function debit(int $amount, int $userId): ?array
     {
-        if ($montant == null) {
+        if ($amount == null) {
             return null;
         }
-        if (!is_integer($montant)) {
+        if (!is_integer($amount)) {
             return "Montant doit être un nombre entier";
         }
 
+        $maxAmount = 0;
         $balance = $this->getBalance($userId);
-        $creditBankAccount = $this->userRepository->creditBankAccount($montant);
+        $debited = false;
 
-        return $balance;
+        $amountTemporary = $amount;
+        if (($balance - $amount) >= $maxAmount) {
+            $amountTemporary = $amount;
+            $debited = true;
+            
+        } else {
+            $amountTemporary = $balance - $maxAmount;
+        }
+
+        $creditBankAccount = $this->userRepository->find($userId)->setBankAccount($balance - $amountTemporary);
+
+        $this->entityManager->flush();
+
+        return [
+            "balance" => $creditBankAccount->getBankAccount(),
+            "debit" => $amount,
+            "debited" => $debited,
+        ];
+    }
+
+    public function getUser(int $userId): ?User
+    {
+        if ($userId == null) {
+            return null;
+        }
+        $user = $this->userRepository->find($userId);
+        if ($user == null) {
+            return "L'utilisateur n'existe pas";
+        }
+
+        return $this->userRepository->find($userId);
     }
 
     public function getBalance(int $userId): ?int
@@ -75,6 +107,7 @@ class UserService
 
         return $this->userRepository->find($userId)->getBankAccount();
     }
+
     public function balanceIsValid(int $balance): ?int
     {
         $maxAmount = 1000;

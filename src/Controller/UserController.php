@@ -15,9 +15,7 @@ class UserController extends AbstractController
     #[Route('/{id}/accounts', methods: ['GET'])]
     public function getBankAccount(User $user, UserService  $userService): JsonResponse
     {
-        return $this->json([
-            'balance' => $userService->getBalance($user->getId()),
-        ]);
+        return $this->json($userService->getUser($user->getId()));
     }
 
     #[Route('/{id}/accounts/credit', methods: ['PUT'])]
@@ -29,10 +27,7 @@ class UserController extends AbstractController
     #[Route('/{id}/accounts/debit', methods: ['PUT'])]
     public function debit(User $user, Request $request, UserService $userService): JsonResponse
     {
-        return $this->json([
-            "debit" => $request->query->get('amount'),
-            "balance" => $userService->debit($request->query->get('amount'), $user->getId()),
-        ]);
+        return $this->json($userService->debit($request->query->get('amount'), $user->getId()));
     } 
 
 }
