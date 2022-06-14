@@ -23,10 +23,7 @@ class UserController extends AbstractController
     #[Route('/{id}/accounts/credit', methods: ['PUT'])]
     public function credit(User $user, Request $request, UserService $userService): JsonResponse
     {
-        return $this->json([
-            "credit" => $request->query->get('amount'),
-            "balance" => $userService->credit($request->query->get('amount'), $user->getId()),
-        ]);
+        return $this->json($userService->credit($request->query->get('amount'), $user->getId()));
     }
 
     #[Route('/{id}/accounts/debit', methods: ['PUT'])]

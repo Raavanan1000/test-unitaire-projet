@@ -16,7 +16,7 @@ class UserService
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
     }
-    public function credit(int $amount, int $userId): ?int
+    public function credit(int $amount, int $userId): ?array
     {
         if ($amount == null) {
             return null;
@@ -27,19 +27,25 @@ class UserService
 
         $maxAmount = 1000;
         $balance = $this->getBalance($userId);
+        $refundAmount = 0;
 
         $amountTemporary = $amount;
         if (($maxAmount - $balance) > $amount) {
             $amountTemporary = $amount;
         } else {
             $amountTemporary = $maxAmount - $balance;
+            $refundAmount = $amount - ($maxAmount - $balance);
         }
 
         $creditBankAccount = $this->userRepository->find($userId)->setBankAccount($balance + $amountTemporary);
 
         $this->entityManager->flush();
 
-        return $this->getBalance($userId);
+        return [
+            "balance" => $creditBankAccount->getBankAccount(),
+            "credit" => $amount,
+            "refund" => $refundAmount,
+        ];
     }
 
     public function debit(int $montant, int $userId): ?int
