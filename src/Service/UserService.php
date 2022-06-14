@@ -2,37 +2,46 @@
 
 
 namespace App\Service;
+
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
-class UserService {
+class UserService
+{
     private $userRepository;
     private $entityManager;
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager) {
+    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager)
+    {
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
     }
-    public function credit(int $montant, int $userId) : ?int
+    public function credit(int $amount, int $userId): ?int
     {
-        if ($montant == null) {
+        if ($amount == null) {
             return null;
         }
-        if (!is_integer($montant)) {
+        if (!is_integer($amount)) {
             return "Montant doit être un nombre entier";
         }
 
         $balance = $this->getBalance($userId);
 
-        if($balance < 10000){
-            $creditBankAccount = $this->userRepository->find($userId)->setBankAccount($montant);
-            $this->entityManager->flush();
+        $amountTemporary = $amount;
+        if ((1000 - $balance) < $amount) {
+            $amountTemporary = $amount;
+        } else {
+            $amountTemporary = 1000 - $balance;
         }
+
+        $creditBankAccount = $this->userRepository->find($userId)->setBankAccount($amountTemporary);
         
-        return $balance;
+        $this->entityManager->flush();
+
+        return $this->getBalance($userId);
     }
 
-    public function debit(int $montant, int $userId) : ?int
+    public function debit(int $montant, int $userId): ?int
     {
         if ($montant == null) {
             return null;
@@ -43,11 +52,11 @@ class UserService {
 
         $balance = $this->getBalance($userId);
         $creditBankAccount = $this->userRepository->creditBankAccount($montant);
-        
+
         return $balance;
     }
 
-    public function getBalance(int $userId) : ?int
+    public function getBalance(int $userId): ?int
     {
         if ($userId == null) {
             return null;
@@ -59,7 +68,4 @@ class UserService {
 
         return $this->userRepository->find($userId)->getBankAccount();
     }
-
-
-
 }
