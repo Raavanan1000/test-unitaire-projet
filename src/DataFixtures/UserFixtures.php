@@ -10,11 +10,10 @@ class UserFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
         $user = new User();
-        $user->setFirstName('');
-        $user->setLastName('');
+        $user->setFirstName('John');
+        $user->setLastName('Doe');
+        $user->setEmail('johndoe@gmail.com');
         $user->setBankAccount(1000);
         $manager->persist($user);
 

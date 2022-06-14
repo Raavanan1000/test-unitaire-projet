@@ -33,6 +33,11 @@ class User
      */
     private $bankAccount;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +75,18 @@ class User
     public function setBankAccount(int $bankAccount): self
     {
         $this->bankAccount = $bankAccount;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
 
         return $this;
     }
