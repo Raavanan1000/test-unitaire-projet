@@ -6,6 +6,7 @@ use App\Service\UserService;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/users')]
@@ -20,20 +21,20 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/accounts/credit', methods: ['PUT'])]
-    public function credit(User $user, int $montant): JsonResponse
+    public function credit(User $user, Request $request, UserService $userService): JsonResponse
     {
         return $this->json([
-            "credit" => 10,
-            "balance" => 200
+            "credit" => $request->query->get('amount'),
+            "balance" => $userService->credit($request->query->get('amount'), $user->getId()),
         ]);
     }
 
     #[Route('/{id}/accounts/debit', methods: ['PUT'])]
-    public function debit(User $user): JsonResponse
+    public function debit(User $user, Request $request, UserService $userService): JsonResponse
     {
         return $this->json([
-            "debit" => 20,
-            "balance" => 210
+            "debit" => $request->query->get('amount'),
+            "balance" => $userService->debit($request->query->get('amount'), $user->getId()),
         ]);
     } 
 
