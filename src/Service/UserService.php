@@ -25,17 +25,18 @@ class UserService
             return "Montant doit être un nombre entier";
         }
 
+        $maxAmount = 1000;
         $balance = $this->getBalance($userId);
 
         $amountTemporary = $amount;
-        if ((1000 - $balance) < $amount) {
+        if (($maxAmount - $balance) > $amount) {
             $amountTemporary = $amount;
         } else {
-            $amountTemporary = 1000 - $balance;
+            $amountTemporary = $maxAmount - $balance;
         }
 
-        $creditBankAccount = $this->userRepository->find($userId)->setBankAccount($amountTemporary);
-        
+        $creditBankAccount = $this->userRepository->find($userId)->setBankAccount($balance + $amountTemporary);
+
         $this->entityManager->flush();
 
         return $this->getBalance($userId);
