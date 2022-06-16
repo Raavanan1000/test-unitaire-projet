@@ -5,6 +5,7 @@ namespace App\Tests\Entity;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use App\Service\UserService;
+use App\Repository\UserRepository;
 use App\Service\EmailSenderService;
 use Carbon\Carbon;
 
@@ -12,7 +13,8 @@ class AccountTest extends TestCase
 {
 
     private User $user;
-    private $emailSenderService;
+    private UserRepository $userRepository;
+    private EmailSenderService $emailSenderService;
 
     protected function setUp(): void
     {
@@ -59,26 +61,10 @@ class AccountTest extends TestCase
         $this->user->setLastName('');
         $this->assertFalse($this->user->isValid());
     }
-    public function testMaxBalance()
+    public function testBalanceIsValid()
     {
         $this->user->bankAccount();
         $this->assertFalse($this->user->isValid());
     }
-    public function testBalanceIsValid()
-    {
-        
-        $this->assertFalse($userService->balanceIsValid($this->user->getBankAccount()));
-    }
-     public function testTimeCredit()
-    {
-        $userService->credit(10, $this->user->getId());
-        $this->emailSenderService->expects($this->once())
-            ->method('sendEmail');
-            
-
-        $this->assertFalse();
-    }
-
-
 
 }

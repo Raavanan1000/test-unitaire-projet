@@ -56,6 +56,7 @@ class User
             &&  $this->bankAccount>=0
             && $this->bankAccount<=1000;
     }
+    
 
     public function setFirstName(string $firstName): self
     {
