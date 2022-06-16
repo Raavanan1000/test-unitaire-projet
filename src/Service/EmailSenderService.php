@@ -2,8 +2,6 @@
 
 namespace App\Service;
 
-use Exception;
-
 class EmailSenderService
 {
 

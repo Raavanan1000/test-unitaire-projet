@@ -30,6 +30,7 @@ class CreditOperationServiceTest extends TestCase
             ->getMock();
 
         $this->entityManagerMock = $this->getMockBuilder(EntityManager::class)
+            ->disableOriginalConstructor()
             ->onlyMethods(['flush'])
             ->getMock();
         
@@ -51,7 +52,7 @@ class CreditOperationServiceTest extends TestCase
 
     public function testSuccessful()
     {
-        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService);
+        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService, $this->entityManagerMock);
         $this->userRepositoryMock->expects($this->once())
             ->method('find')
             ->willReturn($this->user);
@@ -68,7 +69,7 @@ class CreditOperationServiceTest extends TestCase
 
     public function testUserBankAccountBalanceSetsWhenOperationSuccessful()
     {
-        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService);
+        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService, $this->entityManagerMock);
         $this->userRepositoryMock->expects($this->once())
             ->method('find')
             ->willReturn($this->user);
@@ -82,7 +83,7 @@ class CreditOperationServiceTest extends TestCase
 
     public function testRefundAmountDueToBalanceLimitReached()
     {
-        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService);
+        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService, $this->entityManagerMock);
         
         $this->user->setBankAccount(self::USER_ACCOUNT_BALANCE_MAX);
         
@@ -102,7 +103,7 @@ class CreditOperationServiceTest extends TestCase
 
     public function testRefundRemainingAmountDueToBalanceLimitReached()
     {
-        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService);
+        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService, $this->entityManagerMock);
         
         $userId = 1;
         $amount = 400;
@@ -120,7 +121,7 @@ class CreditOperationServiceTest extends TestCase
 
     public function testUserBankAccountBalanceSetsWhenBalanceLimitReached()
     {
-        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService);
+        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService, $this->entityManagerMock);
         
         $userId = 1;
         $amount = 400;
@@ -136,7 +137,7 @@ class CreditOperationServiceTest extends TestCase
 
     public function testUserObjectPersistedTODbWhenOperationSuccesfull()
     {
-        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService);
+        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService, $this->entityManagerMock);
         
         $userId = 1;
         $amount = 400;
@@ -155,7 +156,7 @@ class CreditOperationServiceTest extends TestCase
     // if credit operation between 10pm and 6am, should send email
     public function testSendingEmailIfOperationInTimeInterval()
     {
-        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService);
+        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService, $this->entityManagerMock);
 
         $userId = 1;
         $amount = 150;
@@ -175,7 +176,7 @@ class CreditOperationServiceTest extends TestCase
     // if credit operation is not between 10pm and 6am, don't send email
     public function testNotSendingEmailIfOperationOutOfTimeInterval()
     {
-        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService);
+        $this->creditOperationService = new CreditOperationService($this->userRepositoryMock, $this->emailSenderService, $this->entityManagerMock);
 
         $userId = 1;
         $amount = 150;
