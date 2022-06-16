@@ -40,6 +40,9 @@ class DebitOperationService
             
         } else {
             $amountTemporary = $balance - self::USER_ACCOUNT_BALANCE_MIN;
+            if($amountTemporary > 0) {
+                $debited = true;
+            }
         }
 
         $creditBankAccount = $user->setBankAccount($balance - $amountTemporary);
