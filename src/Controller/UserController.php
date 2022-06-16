@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Service\UserService;
 use App\Service\CreditOperationService;
 use App\Entity\User;
+use App\Service\DebitOperationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,9 +28,9 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/accounts/debit', methods: ['PUT'])]
-    public function debit(User $user, Request $request, UserService $userService): JsonResponse
+    public function debit(User $user, Request $request, DebitOperationService $debitOperationService): JsonResponse
     {
-        return $this->json($userService->debit($request->query->get('amount'), $user->getId()));
+        return $this->json($debitOperationService->debit($request->query->get('amount'), $user->getId(), Carbon::now()));
     } 
 
 }

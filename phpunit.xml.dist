@@ -23,7 +23,7 @@
         </testsuite>
         <testsuite name="unit tests">
             <file>tests/Service/CreditOperationServiceTest.php</file>
-            <!--<file>tests/Service/DebitOperationServiceTest.php</file> -->
+            <file>tests/Service/DebitOperationServiceTest.php</file>
         </testsuite>
     </testsuites>
 
