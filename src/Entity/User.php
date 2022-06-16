@@ -47,6 +47,15 @@ class User
     {
         return $this->firstName;
     }
+    public function isValid(): bool
+    {
+        return !empty($this->email)
+            && filter_var($this->email, FILTER_VALIDATE_EMAIL)
+            && !empty($this->firstName)
+            && !empty($this->lastName)
+            &&  $this->bankAccount>=0
+            && $this->bankAccount<=1000;
+    }
 
     public function setFirstName(string $firstName): self
     {
