@@ -25,6 +25,10 @@
             <file>tests/Service/CreditOperationServiceTest.php</file>
             <file>tests/Service/DebitOperationServiceTest.php</file>
         </testsuite>
+        <testsuite name="integration tests">
+            <file>tests/integration/API_AccountTest.php</file>
+            <file>tests/Service/DebitOperationServiceTest.php</file>
+        </testsuite>
     </testsuites>
 
     <coverage processUncoveredFiles="true">

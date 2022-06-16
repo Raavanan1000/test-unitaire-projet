@@ -42,7 +42,7 @@ class DebitOperationService
             $amountTemporary = $balance - self::USER_ACCOUNT_BALANCE_MIN;
         }
 
-        $creditBankAccount = $this->userRepository->find($userId)->setBankAccount($balance - $amountTemporary);
+        $creditBankAccount = $user->setBankAccount($balance - $amountTemporary);
 
         $this->entityManager->flush();
 
