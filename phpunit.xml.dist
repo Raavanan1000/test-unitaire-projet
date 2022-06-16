@@ -21,6 +21,10 @@
         <testsuite name="Project Test Suite">
             <directory>tests</directory>
         </testsuite>
+        <testsuite name="unit tests">
+            <file>tests/Service/CreditOperationServiceTest.php</file>
+            <!--<file>tests/Service/DebitOperationServiceTest.php</file> -->
+        </testsuite>
     </testsuites>
 
     <coverage processUncoveredFiles="true">
